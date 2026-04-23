@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:       #0d1117;
+  --surface:  #161b22;
+  --surface2: #1c2128;
+  --border:   #21262d;
+  --text:     #e6edf3;
+  --muted:    #8b949e;
+  --accent:   #7c3aed;
+  --green:    #3fb950;
+  --red:      #f85149;
+  --blue:     #388bfd;
+  --purple:   #bc8cff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.container { max-width: 780px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ── Header ─────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.header h1 { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.header-right { text-align: right; }
+.sync-time { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.refresh-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.15s;
+}
+.refresh-btn:hover { background: var(--surface2); }
+.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Hero ───────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, #150d2e 0%, #0d1117 60%);
+  border: 1px solid #2d1f6e;
+  border-radius: 16px;
+  padding: 30px 24px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.hero-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
+}
+.hero-amount {
+  font-size: 52px;
+  font-weight: 800;
+  color: #a78bfa;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.hero-sub {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 18px;
+}
+.hero-sub-item .label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.hero-sub-item .value { font-size: 17px; font-weight: 600; }
+
+/* ── Section title ──────────────────────────────────────────── */
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+/* ── Account cards ──────────────────────────────────────────── */
+.accounts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.account-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  border-top-width: 2px;
+}
+.acct-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.acct-type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.acct-emoji { font-size: 18px; }
+.acct-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.acct-mask { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.acct-balance { font-size: 22px; font-weight: 700; }
+.acct-balance.neg { color: var(--red); }
+
+.border-business { border-top-color: var(--blue); }
+.border-joint     { border-top-color: var(--green); }
+.border-personal  { border-top-color: var(--purple); }
+.border-credit    { border-top-color: var(--red); }
+
+/* ── Transactions ───────────────────────────────────────────── */
+.txn-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.txn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.txn-row:last-child { border-bottom: none; }
+.txn-row:hover { background: var(--surface2); }
+.txn-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.txn-dot.debit  { background: rgba(248,81,73,0.15);  color: var(--red); }
+.txn-dot.credit { background: rgba(63,185,80,0.15);  color: var(--green); }
+.txn-body { flex: 1; min-width: 0; }
+.txn-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txn-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.txn-amt { font-size: 14px; font-weight: 600; flex-shrink: 0; }
+.txn-amt.debit  { color: var(--red); }
+.txn-amt.credit { color: var(--green); }
+
+/* ── Loading / sign-in / error ──────────────────────────────── */
+.center-state { text-align: center; padding: 72px 20px; }
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.center-state p { color: var(--muted); font-size: 14px; }
+.sign-in-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 20px;
+  display: inline-block;
+}
+.sign-in-btn:hover { background: #6d28d9; }
+.error-box {
+  background: rgba(248,81,73,0.08);
+  border: 1px solid rgba(248,81,73,0.3);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--red);
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .accounts-grid { grid-template-columns: 1fr; }
+  .hero-amount { font-size: 40px; }
+  .hero-sub { gap: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>💰 Budget</h1>
+    <div class="header-right">
+      <div class="sync-time" id="syncTime"></div>
+      <button class="refresh-btn" id="refreshBtn" onclick="onRefresh()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="center-state">
+      <div class="spinner"></div>
+      <p>Connecting to Google…</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const CLIENT_ID = '600617051835-0ttmamd2vhpecakq9q8posldgq2m5cdd.apps.googleusercontent.com';
+const SHEET_ID  = '1WXWmJGXLkGk5kBV6pjtKfHxGQmNzqf9tjfiyArUckt0';
+const SCOPE     = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+const CC_MASKS  = ['1010'];
+
+let tokenClient;
+let accessToken = null;
+
+// ── Auth ────────────────────────────────────────────────────────────────────
+
+function waitForGIS(cb) {
+  if (typeof google !== 'undefined' && google.accounts) { cb(); return; }
+  setTimeout(() => waitForGIS(cb), 100);
+}
+
+window.addEventListener('load', () => {
+  waitForGIS(initAuth);
+});
+
+function initAuth() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPE,
+    callback: handleToken,
+  });
+
+  // Try cached token first
+  const cached = getStoredToken();
+  if (cached) {
+    accessToken = cached;
+    fetchData();
+  } else {
+    // Silent sign-in attempt (no popup if already consented)
+    tokenClient.requestAccessToken({ prompt: '' });
+  }
+}
+
+function handleToken(resp) {
+  if (resp.error || !resp.access_token) {
+    showSignIn();
+    return;
+  }
+  accessToken = resp.access_token;
+  storeToken(accessToken, resp.expires_in || 3600);
+  fetchData();
+}
+
+function showSignIn() {
+  document.getElementById('content').innerHTML = `
+    <div class="center-state">
+      <div style="font-size:52px;margin-bottom:16px">💰</div>
+      <h2 style="font-size:20px;margin-bottom:8px">Budget Dashboard</h2>
+      <p>Sign in with Google to view your finances.</p>
+      <button class="sign-in-btn" onclick="signIn()">Sign in with Google</button>
+    </div>`;
+}
+
+function signIn() {
+  tokenClient.requestAccessToken({ prompt: 'consent' });
+}
+
+function onRefresh() {
+  clearStoredToken();
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+// ── Token storage ────────────────────────────────────────────────────────────
+
+function storeToken(tok, expiresIn) {
+  try {
+    localStorage.setItem('_bt', JSON.stringify({ tok, exp: Date.now() + expiresIn * 1000 }));
+  } catch(e) {}
+}
+
+function getStoredToken() {
+  try {
+    const d = JSON.parse(localStorage.getItem('_bt') || 'null');
+    if (d && Date.now() < d.exp - 60000) return d.tok;
+  } catch(e) {}
+  return null;
+}
+
+function clearStoredToken() {
+  try { localStorage.removeItem('_bt'); } catch(e) {}
+}
+
+// ── Data fetching ────────────────────────────────────────────────────────────
+
+async function fetchData() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.disabled = true;
+
+  const base    = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
+  const headers = { Authorization: `Bearer ${accessToken}` };
+
+  try {
+    const [balRes, txnRes] = await Promise.all([
+      fetch(`${base}/Balances!A2:E`,    { headers }),
+      fetch(`${base}/Transactions!A2:H`, { headers }),
+    ]);
+
+    if (balRes.status === 401) {
+      clearStoredToken();
+      tokenClient.requestAccessToken({ prompt: '' });
+      return;
+    }
+
+    const [balData, txnData] = await Promise.all([balRes.json(), txnRes.json()]);
+
+    const allTxns    = txnData.values || [];
+    const recentTxns = allTxns.slice(-50).reverse();
+
+    render(balData.values || [], recentTxns);
+  } catch (err) {
+    document.getElementById('content').innerHTML =
+      `<div class="error-box"><strong>Failed to load data</strong><br><small>${err.message}</small></div>`;
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      const now = new Date();
+      document.getElementById('syncTime').textContent =
+        'Updated ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+  }
+}
+
+// ── Rendering ────────────────────────────────────────────────────────────────
+
+const fmt = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+
+function render(balRows, txnRows) {
+  // Parse accounts: [name, mask, type, balance, updated]
+  const accounts = balRows.map(r => ({
+    name:    r[0] || '',
+    mask:    r[1] || '',
+    type:    r[2] || 'personal',
+    balance: parseFloat(r[3]) || 0,
+  }));
+
+  const cashAccts = accounts.filter(a => !CC_MASKS.includes(a.mask));
+  const ccAccts   = accounts.filter(a =>  CC_MASKS.includes(a.mask));
+  const totalCash = cashAccts.reduce((s, a) => s + a.balance, 0);
+  const totalCC   = ccAccts.reduce((s, a) => s + a.balance, 0);   // already negative
+  const netLiquid = totalCash + totalCC;
+
+  // Account cards
+  const typeEmoji  = { business: '🏢', joint: '🏠', personal: '👤' };
+  const borderCls  = { business: 'border-business', joint: 'border-joint', personal: 'border-personal' };
+
+  const cardHTML = accounts.map(a => {
+    const isCC  = CC_MASKS.includes(a.mask);
+    const bCls  = isCC ? 'border-credit' : (borderCls[a.type] || 'border-personal');
+    const emoji = isCC ? '💳' : (typeEmoji[a.type] || '👤');
+    const negCls = a.balance < 0 ? ' neg' : '';
+    return `
+      <div class="account-card ${bCls}">
+        <div class="acct-header">
+          <span class="acct-type-badge">${a.type}</span>
+          <span class="acct-emoji">${emoji}</span>
+        </div>
+        <div class="acct-name">${a.name}</div>
+        <div class="acct-mask">···${a.mask}</div>
+        <div class="acct-balance${negCls}">${fmt(a.balance)}</div>
+      </div>`;
+  }).join('');
+
+  // Transaction rows
+  const txnHTML = txnRows.length === 0
+    ? `<div class="txn-row" style="justify-content:center;color:var(--muted);font-size:13px;">No transactions yet</div>`
+    : txnRows.map(r => {
+        const date      = r[0] || '';
+        const name      = r[3] || 'Unknown';
+        const amount    = parseFloat(r[4]) || 0;
+        const direction = r[5] || 'debit';
+        const account   = r[1] || '';
+        const category  = (r[6] || '').split(',')[0].trim();
+
+        const isDebit = direction === 'debit';
+        const d       = new Date(date + 'T00:00:00');
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const sign    = isDebit ? '−' : '+';
+        const icon    = isDebit ? '↑' : '↓';
+        const meta    = [dateStr, account, category].filter(Boolean).join(' · ');
+
+        return `
+          <div class="txn-row">
+            <div class="txn-dot ${direction}">${icon}</div>
+            <div class="txn-body">
+              <div class="txn-name">${name}</div>
+              <div class="txn-meta">${meta}</div>
+            </div>
+            <div class="txn-amt ${direction}">${sign}${fmt(amount)}</div>
+          </div>`;
+      }).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="hero">
+      <div class="hero-label">Net Liquid</div>
+      <div class="hero-amount">${fmt(netLiquid)}</div>
+      <div class="hero-sub">
+        <div class="hero-sub-item">
+          <div class="label">Cash</div>
+          <div class="value" style="color:var(--green)">${fmt(totalCash)}</div>
+        </div>
+        <div class="hero-sub-item">
+          <div class="label">Credit Owed</div>
+          <div class="value" style="color:var(--red)">${fmt(Math.abs(totalCC))}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Accounts</div>
+    <div class="accounts-grid">${cardHTML}</div>
+
+    <div class="section-title">Recent Transactions</div>
+    <div class="txn-list">${txnHTML}</div>`;
+}
+</script>
+</body>
+</html>
