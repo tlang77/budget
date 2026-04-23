@@ -266,14 +266,13 @@ function initAuth() {
     callback: handleToken,
   });
 
-  // Try cached token first
+  // Try cached token first, otherwise show sign-in button
   const cached = getStoredToken();
   if (cached) {
     accessToken = cached;
     fetchData();
   } else {
-    // Silent sign-in attempt (no popup if already consented)
-    tokenClient.requestAccessToken({ prompt: '' });
+    showSignIn();
   }
 }
 
