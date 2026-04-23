@@ -2,241 +2,128 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Budget</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Budget Dashboard</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { color-scheme: light; --accent:#7C3AED; --dark:#5B21B6; --muted:#A78BFA; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F7F8FB;min-height:100vh;color:#111827;}
 
-:root {
-  --bg:       #0d1117;
-  --surface:  #161b22;
-  --surface2: #1c2128;
-  --border:   #21262d;
-  --text:     #e6edf3;
-  --muted:    #8b949e;
-  --accent:   #7c3aed;
-  --green:    #3fb950;
-  --red:      #f85149;
-  --blue:     #388bfd;
-  --purple:   #bc8cff;
-}
+.header{background:linear-gradient(135deg,var(--dark),var(--accent));transition:background 0.3s;}
+.hi{max-width:1100px;margin:0 auto;padding:20px 24px 0;}
+.heyebrow{font-size:10px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.12em;}
+.htitle{font-size:26px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-top:2px;}
+.hsub{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;}
+.tabs{display:flex;gap:3px;overflow-x:auto;margin-top:16px;}
+.tab{padding:10px 20px;border:none;border-radius:10px 10px 0 0;background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s;}
+.tab.active{background:#fff;color:var(--accent);}
+.tab:hover:not(.active){background:rgba(255,255,255,.25);}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  min-height: 100vh;
-}
+.main{max-width:1100px;margin:0 auto;padding:20px 24px 60px;}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid #F0F0F0;}
 
-.container { max-width: 780px; margin: 0 auto; padding: 24px 16px 48px; }
+/* Summary */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px;}
+.sc{padding:16px 18px 14px;}
+.sc-lbl{display:flex;align-items:center;gap:5px;margin-bottom:7px;}
+.sc-lbl span:first-child{font-size:15px;}
+.sc-lbl span:last-child{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;}
+.sc-val{font-size:22px;font-weight:900;letter-spacing:-.03em;}
 
-/* ── Header ─────────────────────────────────────────────────── */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-.header h1 { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.header-right { text-align: right; }
-.sync-time { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-.refresh-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 7px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  transition: background 0.15s;
-}
-.refresh-btn:hover { background: var(--surface2); }
-.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Flow */
+.flow{padding:16px 18px;margin-bottom:14px;}
+.flow-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.flow-lbl{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.06em;}
+.badge{font-size:12px;font-weight:800;padding:4px 13px;border-radius:20px;}
+.bg{color:#059669;background:#D1FAE5;}
+.br{color:#DC2626;background:#FEE2E2;}
+.frow{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.flbl{width:60px;font-size:11px;color:#9CA3AF;text-align:right;flex-shrink:0;}
+.ftrk{flex:1;background:#F3F4F6;border-radius:6px;height:24px;overflow:hidden;}
+.ffil{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;}
+.ffil span{font-size:11px;color:#fff;font-weight:700;white-space:nowrap;}
+.srow{display:flex;align-items:center;gap:10px;margin-top:4px;}
+.sspc{width:60px;flex-shrink:0;}
+.strk{flex:1;background:#F3F4F6;border-radius:4px;height:4px;overflow:hidden;}
+.sfil{height:100%;border-radius:4px;}
+.spct{font-size:10px;font-weight:700;white-space:nowrap;}
 
-/* ── Hero ───────────────────────────────────────────────────── */
-.hero {
-  background: linear-gradient(135deg, #150d2e 0%, #0d1117 60%);
-  border: 1px solid #2d1f6e;
-  border-radius: 16px;
-  padding: 30px 24px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-.hero-label {
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  margin-bottom: 10px;
-}
-.hero-amount {
-  font-size: 52px;
-  font-weight: 800;
-  color: #a78bfa;
-  letter-spacing: -2px;
-  line-height: 1;
-}
-.hero-sub {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 18px;
-}
-.hero-sub-item .label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
-.hero-sub-item .value { font-size: 17px; font-weight: 600; }
+/* Tables */
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.dt{display:flex;flex-direction:column;overflow:hidden;}
+.dt-hd{padding:12px 15px;display:flex;justify-content:space-between;align-items:center;background:#FAFAFA;}
+.dt-hl{font-size:11px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;}
+.dt-ht{font-size:14px;font-weight:900;}
+.dt-bd{overflow-y:auto;max-height:460px;}
+.tr{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;border-bottom:1px solid #F9FAFB;}
+.tr-nm{font-size:13px;font-weight:500;color:#111827;}
+.tr-nt{font-size:10px;color:#9CA3AF;margin-top:1px;}
+.tr-r{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:10px;}
+.tr-amt{font-size:13px;font-weight:700;}
+.pill{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;}
+.dt-ft{padding:11px 15px;display:flex;justify-content:space-between;background:#FAFAFA;}
+.dt-fl{font-size:11px;font-weight:700;color:#9CA3AF;}
+.dt-ft2{font-size:14px;font-weight:900;}
 
-/* ── Section title ──────────────────────────────────────────── */
-.section-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 10px;
-}
+/* Balances */
+.bal-hero{padding:20px 22px;margin-bottom:14px;}
+.bal-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;}
+.bal-ey{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px;}
+.bal-big{font-size:36px;font-weight:900;letter-spacing:-.04em;}
+.bal-sm{font-size:11px;color:#9CA3AF;margin-top:5px;}
+.bal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.bal-c{padding:16px 18px;}
+.bal-ct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.bal-nm{font-size:13px;font-weight:700;color:#374151;}
+.bal-mk{font-size:11px;color:#9CA3AF;margin-top:2px;}
+.bal-am{font-size:28px;font-weight:900;letter-spacing:-.03em;}
+.bal-ud{font-size:10px;color:#9CA3AF;margin-top:4px;}
+.refresh-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:background .15s;}
+.refresh-btn:hover{background:rgba(255,255,255,.25);}
+.refresh-btn:disabled{opacity:.5;cursor:not-allowed;}
+.bal-refresh-btn{background:#F3F4F6;border:1px solid #E5E7EB;color:#374151;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:background .15s;}
+.bal-refresh-btn:hover{background:#E5E7EB;}
 
-/* ── Account cards ──────────────────────────────────────────── */
-.accounts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-.account-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  border-top-width: 2px;
-}
-.acct-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.acct-type-badge {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--muted);
-}
-.acct-emoji { font-size: 18px; }
-.acct-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-.acct-mask { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.acct-balance { font-size: 22px; font-weight: 700; }
-.acct-balance.neg { color: var(--red); }
+/* Subscriptions */
+.sub-sg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:4px;}
+.sub-title{font-size:13px;font-weight:800;color:#374151;margin:18px 0 10px;letter-spacing:-.01em;}
+.sub-row{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;border-bottom:1px solid #F9FAFB;}
+.sub-row:last-child{border-bottom:none;}
+.sub-nm{font-size:13px;font-weight:500;color:#111827;}
+.sub-dt{font-size:10px;color:#9CA3AF;margin-top:1px;}
+.sub-r{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.sub-amt{font-size:13px;font-weight:700;color:#374151;}
+.annual-pill{font-size:9px;font-weight:800;background:#FEF3C7;color:#92400E;padding:2px 7px;border-radius:6px;}
+.dream-banner{margin-bottom:12px;padding:12px 16px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid #FCD34D;border-radius:12px;font-size:12px;color:#92400E;font-weight:600;}
 
-.border-business { border-top-color: var(--blue); }
-.border-joint     { border-top-color: var(--green); }
-.border-personal  { border-top-color: var(--purple); }
-.border-credit    { border-top-color: var(--red); }
+/* Auth states */
+.auth-overlay{display:flex;align-items:center;justify-content:center;min-height:60vh;}
+.auth-box{text-align:center;padding:48px 32px;}
+.auth-icon{font-size:52px;margin-bottom:16px;}
+.auth-title{font-size:20px;font-weight:800;color:#111827;margin-bottom:8px;}
+.auth-sub{font-size:14px;color:#6B7280;margin-bottom:24px;}
+.sign-in-btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.sign-in-btn:hover{background:var(--dark);}
+.spinner{width:32px;height:32px;border:3px solid #E5E7EB;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:13px;color:#9CA3AF;}
 
-/* ── Transactions ───────────────────────────────────────────── */
-.txn-list {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.txn-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
-}
-.txn-row:last-child { border-bottom: none; }
-.txn-row:hover { background: var(--surface2); }
-.txn-dot {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-.txn-dot.debit  { background: rgba(248,81,73,0.15);  color: var(--red); }
-.txn-dot.credit { background: rgba(63,185,80,0.15);  color: var(--green); }
-.txn-body { flex: 1; min-width: 0; }
-.txn-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.txn-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.txn-amt { font-size: 14px; font-weight: 600; flex-shrink: 0; }
-.txn-amt.debit  { color: var(--red); }
-.txn-amt.credit { color: var(--green); }
-
-/* ── Loading / sign-in / error ──────────────────────────────── */
-.center-state { text-align: center; padding: 72px 20px; }
-.spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.center-state p { color: var(--muted); font-size: 14px; }
-.sign-in-btn {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 14px 36px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 20px;
-  display: inline-block;
-}
-.sign-in-btn:hover { background: #6d28d9; }
-.error-box {
-  background: rgba(248,81,73,0.08);
-  border: 1px solid rgba(248,81,73,0.3);
-  border-radius: 12px;
-  padding: 20px;
-  color: var(--red);
-  text-align: center;
-  font-size: 14px;
-}
-
-/* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 480px) {
-  .accounts-grid { grid-template-columns: 1fr; }
-  .hero-amount { font-size: 40px; }
-  .hero-sub { gap: 24px; }
+@media(max-width:700px){
+  .hi{padding:14px 14px 0;}
+  .htitle{font-size:20px;}
+  .main{padding:16px 14px 40px;}
+  .sg{grid-template-columns:1fr 1fr;}
+  .sg .sc:last-child{grid-column:1/-1;}
+  .tg{grid-template-columns:1fr;}
+  .bal-grid{grid-template-columns:1fr;}
+  .sub-sg{grid-template-columns:1fr 1fr;}
+  .sub-sg .sc:last-child{grid-column:1/-1;}
+  .tab{padding:8px 13px;font-size:12px;}
 }
 </style>
 </head>
 <body>
-<div class="container">
-
-  <div class="header">
-    <h1>💰 Budget</h1>
-    <div class="header-right">
-      <div class="sync-time" id="syncTime"></div>
-      <button class="refresh-btn" id="refreshBtn" onclick="onRefresh()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-        </svg>
-        Refresh
-      </button>
-    </div>
-  </div>
-
-  <div id="content">
-    <div class="center-state">
-      <div class="spinner"></div>
-      <p>Connecting to Google…</p>
-    </div>
-  </div>
-
-</div>
+<div id="app"></div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
@@ -245,10 +132,131 @@ const SHEET_ID  = '1WXWmJGXLkGk5kBV6pjtKfHxGQmNzqf9tjfiyArUckt0';
 const SCOPE     = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 const CC_MASKS  = ['1010'];
 
-let tokenClient;
-let accessToken = null;
+const THEMES = {
+  Personal:     {accent:'#7C3AED',dark:'#5B21B6',muted:'#A78BFA'},
+  Business:     {accent:'#0D9488',dark:'#0F766E',muted:'#5EEAD4'},
+  Balances:     {accent:'#2563EB',dark:'#1D4ED8',muted:'#93C5FD'},
+  Subscriptions:{accent:'#E11D48',dark:'#BE123C',muted:'#FDA4AF'},
+  Dream:        {accent:'#D97706',dark:'#B45309',muted:'#FCD34D'},
+};
+const ICONS = {Personal:'🏠',Business:'💼',Dream:'✨',Balances:'🏦',Subscriptions:'📱'};
+const SCOL  = {personal:'#7C3AED',joint:'#059669',business:'#0D9488',dream:'#D97706'};
+const SBG   = {personal:'#F5F3FF',joint:'#D1FAE5',business:'#CCFBF1',dream:'#FEF3C7'};
 
-// ── Auth ────────────────────────────────────────────────────────────────────
+// ── Static budget data ────────────────────────────────────────────────────────
+const PERSONAL=[
+  {s:'personal',c:'income', item:'Tyler — Fatals Payroll',         amt:3129.64,notes:'bi-weekly ×26÷12'},
+  {s:'personal',c:'expense',item:'Life Insurance',                  amt:168.00},
+  {s:'personal',c:'expense',item:'City of Hope (payment plan)',     amt:88.18},
+  {s:'personal',c:'expense',item:'Affirm — Gazebo',                amt:263.85,notes:'temporary'},
+  {s:'personal',c:'expense',item:'Capital One CC',                  amt:96.00, notes:'avg'},
+  {s:'personal',c:'expense',item:'Synchrony Bank CC',               amt:74.00, notes:'avg'},
+  {s:'personal',c:'expense',item:'PI*Paylease',                     amt:2.95},
+  {s:'personal',c:'expense',item:'Crunchyroll',                     amt:13.04},
+  {s:'personal',c:'expense',item:'Apple Subscriptions',             amt:19.57},
+  {s:'personal',c:'expense',item:'Apple Music',                     amt:10.99},
+  {s:'personal',c:'expense',item:'Francisco (barber)',              amt:50.00},
+  {s:'joint',   c:'income', item:'Isabella — Fatals Payroll',       amt:580.30, notes:'bi-weekly ×26÷12'},
+  {s:'joint',   c:'income', item:'Isabella — Cancer Treatment',     amt:4108.33,notes:'bi-weekly ×26÷12 avg'},
+  {s:'joint',   c:'expense',item:'Mortgage (Crosscountry)',         amt:2257.70},
+  {s:'joint',   c:'expense',item:'HOA Fee',                         amt:120.00},
+  {s:'joint',   c:'expense',item:'Brinks Home Alarm',               amt:64.00},
+  {s:'joint',   c:'expense',item:'APS Electric',                    amt:120.00, notes:'avg'},
+  {s:'joint',   c:'expense',item:'Southwest Gas',                   amt:71.00,  notes:'avg seasonal'},
+  {s:'joint',   c:'expense',item:'Goodyear Utility',                amt:183.00, notes:'avg'},
+  {s:'joint',   c:'expense',item:'Amazon Prime',                    amt:16.31},
+  {s:'joint',   c:'expense',item:'Spotify',                         amt:22.00},
+  {s:'joint',   c:'expense',item:'Netflix',                         amt:26.58},
+  {s:'joint',   c:'expense',item:'Hulu',                            amt:32.63},
+  {s:'joint',   c:'expense',item:'Verizon (Isabella phone)',         amt:176.47},
+  {s:'joint',   c:'expense',item:'PI*Associatedclass',              amt:120.00, notes:'possibly HOA'},
+  {s:'joint',   c:'expense',item:'Hubbard Swim Lessons',            amt:130.00, notes:"son's swim class"},
+  {s:'joint',   c:'expense',item:'Chewy (pets)',                    amt:115.00},
+  {s:'joint',   c:'expense',item:'Groceries (Frys / Costco / etc)', amt:700.00, notes:'estimated avg'},
+];
+const BUSINESS=[
+  {c:'income', item:'TikTok Creator Fund',        amt:3000.00,notes:'estimate'},
+  {c:'income', item:'TikTok Shop / Bonuses',       amt:2000.00,notes:'estimate'},
+  {c:'income', item:'UGC / Brand Deals (PayPal)',  amt:2000.00,notes:'estimate'},
+  {c:'income', item:'Other Payouts',               amt:666.67, notes:'estimate'},
+  {c:'expense',item:'Intuit Payroll — Tyler',      amt:3129.64,notes:'bi-weekly ×26÷12'},
+  {c:'expense',item:'Intuit Payroll — Isabella',   amt:580.30, notes:'bi-weekly ×26÷12'},
+  {c:'expense',item:'Intuit Payroll Tax',          amt:1211.36,notes:'bi-weekly ×26÷12'},
+  {c:'expense',item:'IRS Estimated Tax',           amt:220.00},
+  {c:'expense',item:'Wise — Editors (variable)',   amt:1095.00,notes:'March actual'},
+  {c:'expense',item:'QuickBooks Fee',              amt:149.06},
+  {c:'expense',item:'Wyyerd Internet',             amt:157.32},
+  {c:'expense',item:'Heygen',                      amt:31.55},
+  {c:'expense',item:'CapCut Subscription',         amt:19.99},
+  {c:'expense',item:'Claude Pro',                  amt:21.76, notes:'annual on Apple — expires Mar 2027'},
+  {c:'expense',item:'Lovable (website)',           amt:27.20},
+  {c:'expense',item:'Mirage Captions',             amt:24.99},
+  {c:'expense',item:'X / Twitter',                 amt:8.70},
+  {c:'expense',item:'Twilio',                      amt:20.00, notes:'Clawdia SMS'},
+];
+const DREAM=[
+  {c:'income', item:'TikTok Ads / Creator Fund',  amt:10000.00,notes:'goal'},
+  {c:'income', item:'UGC / Brand Deals',          amt:5000.00, notes:'goal'},
+  {c:'income', item:'YouTube',                    amt:5000.00, notes:'goal'},
+  {c:'income', item:'Twitch',                     amt:2000.00, notes:'goal'},
+  {c:'expense',item:'Mortgage',                   amt:2257.70},
+  {c:'expense',item:'HOA Fee',                    amt:120.00},
+  {c:'expense',item:'IRS Payment (goal: $0)',     amt:0.00,    notes:'paid off'},
+  {c:'expense',item:'Wife Student Loan (2028+)',  amt:350.00,  notes:'reactivates 2028'},
+  {c:'expense',item:'Life Insurance',             amt:168.00},
+  {c:'expense',item:'APS Electric',              amt:120.00},
+  {c:'expense',item:'Southwest Gas',             amt:71.00},
+  {c:'expense',item:'Goodyear Utility',          amt:183.00},
+  {c:'expense',item:'Brinks Home Alarm',         amt:64.00},
+  {c:'expense',item:'PI*Associatedclass',        amt:120.00},
+  {c:'expense',item:'Verizon (Isabella phone)',  amt:176.47},
+  {c:'expense',item:'Amazon Prime',              amt:16.31},
+  {c:'expense',item:'Spotify',                   amt:22.00},
+  {c:'expense',item:'Netflix',                   amt:26.58},
+  {c:'expense',item:'Hulu',                      amt:32.63},
+  {c:'expense',item:'Crunchyroll',               amt:13.04},
+  {c:'expense',item:'Apple Subscriptions',       amt:19.57},
+  {c:'expense',item:'Hubbard Swim Lessons',      amt:147.50},
+  {c:'expense',item:'Chewy (pets)',              amt:115.00},
+  {c:'expense',item:'Francisco (barber)',        amt:50.00},
+  {c:'expense',item:'Groceries',                 amt:700.00},
+];
+const SUBS_MONTHLY=[
+  {name:'Netflix',            amt:26.58, acct:'joint',   cat:'personal'},
+  {name:'Hulu',               amt:32.63, acct:'joint',   cat:'personal'},
+  {name:'Spotify',            amt:22.00, acct:'joint',   cat:'personal'},
+  {name:'Amazon Prime',       amt:16.31, acct:'joint',   cat:'personal'},
+  {name:'Verizon (Isabella)', amt:176.47,acct:'joint',   cat:'personal'},
+  {name:'Brinks Home Alarm',  amt:64.00, acct:'joint',   cat:'personal'},
+  {name:'PI*Associatedclass', amt:120.00,acct:'joint',   cat:'personal',notes:'possibly HOA'},
+  {name:'Chewy',              amt:115.00,acct:'joint',   cat:'personal'},
+  {name:'City of Hope',       amt:88.18, acct:'joint',   cat:'personal',notes:'payment plan'},
+  {name:'PI*Paylease',        amt:2.95,  acct:'joint',   cat:'personal'},
+  {name:'Crunchyroll',        amt:13.04, acct:'personal',cat:'personal'},
+  {name:'Apple Music',        amt:10.99, acct:'personal',cat:'personal'},
+  {name:'Apple Subscriptions',amt:19.57, acct:'personal',cat:'personal',notes:'iCloud etc'},
+  {name:'Affirm (Gazebo)',    amt:263.85,acct:'personal',cat:'personal',notes:'temporary'},
+  {name:'Heygen',             amt:31.55, acct:'business',cat:'business'},
+  {name:'CapCut',             amt:19.99, acct:'business',cat:'business'},
+  {name:'Claude Pro',         amt:21.76, acct:'business',cat:'business'},
+  {name:'Lovable (website)',  amt:27.20, acct:'business',cat:'business'},
+  {name:'Mirage Captions',    amt:24.99, acct:'business',cat:'business'},
+  {name:'X / Twitter',        amt:8.70,  acct:'business',cat:'business'},
+  {name:'Twilio',             amt:20.00, acct:'business',cat:'business',notes:'Clawdia'},
+];
+const SUBS_ANNUAL=[
+  {name:'Notion',             amt:261.12,acct:'business',cat:'business',renews:'Feb 2027'},
+  {name:'Rocketreach',        amt:431.32,acct:'business',cat:'business',renews:'Mar 2027',notes:'outreach tool'},
+  {name:'Wondershare',        amt:87.43, acct:'business',cat:'business',renews:'Mar 2027',notes:'video editing'},
+  {name:'Claude Pro (Apple)', amt:261.00,acct:'personal',cat:'business',renews:'Mar 2027',notes:'move to business on renewal'},
+  {name:'BePresent',          amt:59.99, acct:'personal',cat:'personal',renews:'Mar 2027',notes:'screen time app'},
+];
+
+// ── Auth state ────────────────────────────────────────────────────────────────
+let tokenClient, accessToken = null;
+let liveBalances = null, balLastSync = null;
+let tab = 'Personal';
+let authReady = false;
 
 function waitForGIS(cb) {
   if (typeof google !== 'undefined' && google.accounts) { cb(); return; }
@@ -256,208 +264,305 @@ function waitForGIS(cb) {
 }
 
 window.addEventListener('load', () => {
+  render(); // render immediately with sign-in state
   waitForGIS(initAuth);
 });
 
 function initAuth() {
+  authReady = true;
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPE,
     callback: handleToken,
   });
-
-  // Try cached token first, otherwise show sign-in button
   const cached = getStoredToken();
   if (cached) {
     accessToken = cached;
-    fetchData();
+    fetchBalances();
   } else {
-    showSignIn();
+    showSignInIfNeeded();
   }
 }
 
 function handleToken(resp) {
-  if (resp.error || !resp.access_token) {
-    showSignIn();
-    return;
-  }
+  if (resp.error || !resp.access_token) { render(); return; }
   accessToken = resp.access_token;
   storeToken(accessToken, resp.expires_in || 3600);
-  fetchData();
+  fetchBalances();
 }
 
-function showSignIn() {
-  document.getElementById('content').innerHTML = `
-    <div class="center-state">
-      <div style="font-size:52px;margin-bottom:16px">💰</div>
-      <h2 style="font-size:20px;margin-bottom:8px">Budget Dashboard</h2>
-      <p>Sign in with Google to view your finances.</p>
-      <button class="sign-in-btn" onclick="signIn()">Sign in with Google</button>
-    </div>`;
-}
+function signIn() { tokenClient.requestAccessToken({ prompt: 'consent' }); }
 
-function signIn() {
-  tokenClient.requestAccessToken({ prompt: 'consent' });
-}
-
-function onRefresh() {
+function onRefreshBalances() {
   clearStoredToken();
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
+  liveBalances = null;
+  balLastSync = null;
+  render();
   tokenClient.requestAccessToken({ prompt: '' });
 }
 
-// ── Token storage ────────────────────────────────────────────────────────────
-
-function storeToken(tok, expiresIn) {
-  try {
-    localStorage.setItem('_bt', JSON.stringify({ tok, exp: Date.now() + expiresIn * 1000 }));
-  } catch(e) {}
+function showSignInIfNeeded() {
+  if (tab === 'Balances') render();
 }
 
+// ── Token storage ─────────────────────────────────────────────────────────────
+function storeToken(tok, exp) {
+  try { localStorage.setItem('_bt', JSON.stringify({tok, exp: Date.now() + exp * 1000})); } catch(e) {}
+}
 function getStoredToken() {
-  try {
-    const d = JSON.parse(localStorage.getItem('_bt') || 'null');
-    if (d && Date.now() < d.exp - 60000) return d.tok;
-  } catch(e) {}
+  try { const d = JSON.parse(localStorage.getItem('_bt')||'null'); if(d && Date.now()<d.exp-60000) return d.tok; } catch(e) {}
   return null;
 }
+function clearStoredToken() { try { localStorage.removeItem('_bt'); } catch(e) {} }
 
-function clearStoredToken() {
-  try { localStorage.removeItem('_bt'); } catch(e) {}
-}
-
-// ── Data fetching ────────────────────────────────────────────────────────────
-
-async function fetchData() {
-  const btn = document.getElementById('refreshBtn');
-  if (btn) btn.disabled = true;
-
-  const base    = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
-  const headers = { Authorization: `Bearer ${accessToken}` };
-
+// ── Live data fetch ───────────────────────────────────────────────────────────
+async function fetchBalances() {
+  if (!accessToken) return;
   try {
-    const [balRes, txnRes] = await Promise.all([
-      fetch(`${base}/Balances!A2:E`,    { headers }),
-      fetch(`${base}/Transactions!A2:H`, { headers }),
-    ]);
-
-    if (balRes.status === 401) {
-      clearStoredToken();
-      tokenClient.requestAccessToken({ prompt: '' });
-      return;
-    }
-
-    const [balData, txnData] = await Promise.all([balRes.json(), txnRes.json()]);
-
-    const allTxns    = txnData.values || [];
-    const recentTxns = allTxns.slice(-50).reverse();
-
-    render(balData.values || [], recentTxns);
-  } catch (err) {
-    document.getElementById('content').innerHTML =
-      `<div class="error-box"><strong>Failed to load data</strong><br><small>${err.message}</small></div>`;
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      const now = new Date();
-      document.getElementById('syncTime').textContent =
-        'Updated ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    }
-  }
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Balances!A2:E`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+    if (res.status === 401) { clearStoredToken(); accessToken = null; render(); return; }
+    const data = await res.json();
+    liveBalances = data.values || [];
+    balLastSync = new Date();
+    if (tab === 'Balances') render();
+  } catch(e) { console.error(e); }
 }
 
-// ── Rendering ────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const money = n => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
 
-const fmt = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+function setTheme(t) {
+  const th = THEMES[t], s = document.documentElement.style;
+  s.setProperty('--accent', th.accent);
+  s.setProperty('--dark', th.dark);
+  s.setProperty('--muted', th.muted);
+}
 
-function render(balRows, txnRows) {
-  // Parse accounts: [name, mask, type, balance, updated]
-  const accounts = balRows.map(r => ({
-    name:    r[0] || '',
-    mask:    r[1] || '',
-    type:    r[2] || 'personal',
-    balance: parseFloat(r[3]) || 0,
-  }));
+function summaryCards(income, expenses, balance, th) {
+  return `<div class="sg">
+    ${[
+      {i:'💰',l:'Monthly Income',  v:income,  c:th.accent},
+      {i:'📤',l:'Monthly Expenses',v:expenses,c:'#EF4444'},
+      {i:balance>=0?'📈':'📉',l:'Cash Balance',v:balance,c:balance>=0?'#059669':'#EF4444'},
+    ].map(x=>`<div class="card sc">
+      <div class="sc-lbl"><span>${x.i}</span><span>${x.l}</span></div>
+      <div class="sc-val" style="color:${x.c}">${money(x.v)}</div>
+    </div>`).join('')}
+  </div>`;
+}
 
-  const cashAccts = accounts.filter(a => !CC_MASKS.includes(a.mask));
-  const ccAccts   = accounts.filter(a =>  CC_MASKS.includes(a.mask));
-  const totalCash = cashAccts.reduce((s, a) => s + a.balance, 0);
-  const totalCC   = ccAccts.reduce((s, a) => s + a.balance, 0);   // already negative
-  const netLiquid = totalCash + totalCC;
+function flowBar(income, expenses, th) {
+  const surplus = income - expenses, pos = surplus >= 0;
+  const pct = income > 0 ? (surplus / income * 100) : 0;
+  const mx = Math.max(income, expenses, 1);
+  return `<div class="card flow">
+    <div class="flow-hd">
+      <span class="flow-lbl">Monthly Cash Flow</span>
+      <span class="badge ${pos?'bg':'br'}">${pos?'+':''}${money(surplus)}&nbsp;(${pct>=0?'+':''}${pct.toFixed(1)}%)</span>
+    </div>
+    ${[['Income',income,'#059669'],['Expenses',expenses,'#EF4444']].map(([lbl,v,col])=>`
+      <div class="frow">
+        <span class="flbl">${lbl}</span>
+        <div class="ftrk"><div class="ffil" style="width:${(v/mx*100).toFixed(1)}%;background:${col}"><span>${money(v)}</span></div></div>
+      </div>`).join('')}
+    <div class="srow">
+      <span class="sspc"></span>
+      <div class="strk"><div class="sfil" style="width:${Math.abs(pct).toFixed(1)}%;background:${pos?`linear-gradient(90deg,${th.accent},${th.muted})`:'#EF4444'}"></div></div>
+      <span class="spct" style="color:${pos?th.accent:'#EF4444'}">${Math.abs(pct).toFixed(0)}% ${pos?'saved':'deficit'}</span>
+    </div>
+  </div>`;
+}
 
-  // Account cards
-  const typeEmoji  = { business: '🏢', joint: '🏠', personal: '👤' };
-  const borderCls  = { business: 'border-business', joint: 'border-joint', personal: 'border-personal' };
-
-  const cardHTML = accounts.map(a => {
-    const isCC  = CC_MASKS.includes(a.mask);
-    const bCls  = isCC ? 'border-credit' : (borderCls[a.type] || 'border-personal');
-    const emoji = isCC ? '💳' : (typeEmoji[a.type] || '👤');
-    const negCls = a.balance < 0 ? ' neg' : '';
-    return `
-      <div class="account-card ${bCls}">
-        <div class="acct-header">
-          <span class="acct-type-badge">${a.type}</span>
-          <span class="acct-emoji">${emoji}</span>
+function makeTable(title, rows, total, accent, showSection=false) {
+  return `<div class="card dt">
+    <div class="dt-hd" style="border-bottom:2px solid ${accent}">
+      <span class="dt-hl">${title}</span>
+      <span class="dt-ht" style="color:${accent}">${money(total)}</span>
+    </div>
+    <div class="dt-bd">
+      ${rows.map((r,i)=>`<div class="tr" style="background:${i%2===0?'#fff':'#FAFBFE'}">
+        <div style="min-width:0;flex:1">
+          <div class="tr-nm">${r.item}</div>
+          ${r.notes?`<div class="tr-nt">${r.notes}</div>`:''}
         </div>
-        <div class="acct-name">${a.name}</div>
-        <div class="acct-mask">···${a.mask}</div>
-        <div class="acct-balance${negCls}">${fmt(a.balance)}</div>
-      </div>`;
-  }).join('');
-
-  // Transaction rows
-  const txnHTML = txnRows.length === 0
-    ? `<div class="txn-row" style="justify-content:center;color:var(--muted);font-size:13px;">No transactions yet</div>`
-    : txnRows.map(r => {
-        const date      = r[0] || '';
-        const name      = r[3] || 'Unknown';
-        const amount    = parseFloat(r[4]) || 0;
-        const direction = r[5] || 'debit';
-        const account   = r[1] || '';
-        const category  = (r[6] || '').split(',')[0].trim();
-
-        const isDebit = direction === 'debit';
-        const d       = new Date(date + 'T00:00:00');
-        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        const sign    = isDebit ? '−' : '+';
-        const icon    = isDebit ? '↑' : '↓';
-        const meta    = [dateStr, account, category].filter(Boolean).join(' · ');
-
-        return `
-          <div class="txn-row">
-            <div class="txn-dot ${direction}">${icon}</div>
-            <div class="txn-body">
-              <div class="txn-name">${name}</div>
-              <div class="txn-meta">${meta}</div>
-            </div>
-            <div class="txn-amt ${direction}">${sign}${fmt(amount)}</div>
-          </div>`;
-      }).join('');
-
-  document.getElementById('content').innerHTML = `
-    <div class="hero">
-      <div class="hero-label">Net Liquid</div>
-      <div class="hero-amount">${fmt(netLiquid)}</div>
-      <div class="hero-sub">
-        <div class="hero-sub-item">
-          <div class="label">Cash</div>
-          <div class="value" style="color:var(--green)">${fmt(totalCash)}</div>
+        <div class="tr-r">
+          ${showSection?`<span class="pill" style="background:${SBG[r.s]};color:${SCOL[r.s]}">${r.s}</span>`:''}
+          <span class="tr-amt" style="color:${accent==='#EF4444'?'#374151':accent}">${money(r.amt)}</span>
         </div>
-        <div class="hero-sub-item">
-          <div class="label">Credit Owed</div>
-          <div class="value" style="color:var(--red)">${fmt(Math.abs(totalCC))}</div>
+      </div>`).join('')}
+    </div>
+    <div class="dt-ft" style="border-top:1px solid #F3F4F6">
+      <span class="dt-fl">TOTAL</span>
+      <span class="dt-ft2" style="color:${accent}">${money(total)}</span>
+    </div>
+  </div>`;
+}
+
+// ── Tab renderers ─────────────────────────────────────────────────────────────
+function renderPersonal() {
+  const th = THEMES.Personal;
+  const income = PERSONAL.filter(r=>r.c==='income');
+  const expenses = PERSONAL.filter(r=>r.c==='expense');
+  const ti = income.reduce((s,r)=>s+r.amt,0);
+  const te = expenses.reduce((s,r)=>s+r.amt,0);
+  return summaryCards(ti,te,ti-te,th)
+    + flowBar(ti,te,th)
+    + `<div class="tg">${makeTable('Income Sources',income,ti,th.accent,true)}${makeTable('Expenses',expenses,te,'#EF4444',true)}</div>`;
+}
+
+function renderBusiness() {
+  const th = THEMES.Business;
+  const income = BUSINESS.filter(r=>r.c==='income');
+  const expenses = BUSINESS.filter(r=>r.c==='expense');
+  const ti = income.reduce((s,r)=>s+r.amt,0);
+  const te = expenses.reduce((s,r)=>s+r.amt,0);
+  return summaryCards(ti,te,ti-te,th)
+    + flowBar(ti,te,th)
+    + `<div class="tg">${makeTable('Revenue',income,ti,th.accent)}${makeTable('Expenses',expenses,te,'#EF4444')}</div>`;
+}
+
+function renderDream() {
+  const th = THEMES.Dream;
+  const income = DREAM.filter(r=>r.c==='income');
+  const expenses = DREAM.filter(r=>r.c==='expense');
+  const ti = income.reduce((s,r)=>s+r.amt,0);
+  const te = expenses.reduce((s,r)=>s+r.amt,0);
+  return `<div class="dream-banner">✨ Dream Budget — projected goals at $100k+ annual target</div>`
+    + summaryCards(ti,te,ti-te,th)
+    + flowBar(ti,te,th)
+    + `<div class="tg">${makeTable('Goal Income',income,ti,th.accent)}${makeTable('Projected Expenses',expenses,te,'#EF4444')}</div>`;
+}
+
+function renderBalances() {
+  const th = THEMES.Balances;
+
+  // Not yet authenticated
+  if (!accessToken && !liveBalances) {
+    return `<div class="auth-overlay"><div class="auth-box">
+      <div class="auth-icon">🏦</div>
+      <div class="auth-title">Sign in to view live balances</div>
+      <div class="auth-sub">Connects to your Budget Tracking sheet</div>
+      ${authReady ? `<button class="sign-in-btn" onclick="signIn()">Sign in with Google</button>` : `<div class="spinner"></div><div class="loading-text">Connecting…</div>`}
+    </div></div>`;
+  }
+
+  // Loading
+  if (!liveBalances) {
+    return `<div class="auth-overlay"><div class="auth-box">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading live balances…</div>
+    </div></div>`;
+  }
+
+  // Parse: [name, mask, type, balance, updated]
+  const balances = liveBalances.map(row => {
+    const balance = parseFloat(row[3]) || 0;
+    const mask = row[1] || '';
+    const isCredit = CC_MASKS.includes(mask);
+    return {
+      account: row[0] || '',
+      mask,
+      type: row[2] || 'personal',
+      balance: isCredit ? Math.abs(balance) : balance,
+      credit: isCredit,
+      updated: row[4] || ''
+    };
+  });
+
+  const cash = balances.filter(b=>!b.credit);
+  const totalCash = cash.reduce((s,b)=>s+b.balance,0);
+  const totalCredit = balances.filter(b=>b.credit).reduce((s,b)=>s+b.balance,0);
+  const net = totalCash - totalCredit;
+  const syncStr = balLastSync ? balLastSync.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '—';
+
+  return `<div class="card bal-hero">
+    <div class="bal-top">
+      <div>
+        <div class="bal-ey">Net Liquid Assets</div>
+        <div class="bal-big" style="color:${th.accent}">${money(net)}</div>
+        <div class="bal-sm">${money(totalCash)} cash &nbsp;·&nbsp; ${money(totalCredit)} credit owed &nbsp;·&nbsp; Synced ${syncStr}</div>
+      </div>
+      <button class="bal-refresh-btn" onclick="onRefreshBalances()">↻ Refresh</button>
+    </div>
+  </div>
+  <div class="bal-grid">
+    ${balances.map(b=>`<div class="card bal-c">
+      <div class="bal-ct">
+        <div><div class="bal-nm">${b.account}</div><div class="bal-mk">···${b.mask}</div></div>
+        <span class="pill" style="background:${SBG[b.type]||SBG.personal};color:${SCOL[b.type]||SCOL.personal}">${b.type}</span>
+      </div>
+      <div class="bal-am" style="color:${b.credit?'#EF4444':SCOL[b.type]||SCOL.personal}">${b.credit?'-':''}${money(b.balance)}</div>
+      <div class="bal-ud">Last updated ${b.updated}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderSubscriptions() {
+  const th = THEMES.Subscriptions;
+  const persMonthly = SUBS_MONTHLY.filter(s=>s.cat==='personal');
+  const bizMonthly  = SUBS_MONTHLY.filter(s=>s.cat==='business');
+  const totalMonthly = SUBS_MONTHLY.reduce((s,r)=>s+r.amt,0);
+  const totalAnnual  = SUBS_ANNUAL.reduce((s,r)=>s+r.amt,0);
+  const annualMoEquiv = totalAnnual / 12;
+  const grand = totalMonthly + annualMoEquiv;
+
+  const sRow = (s,i,annual=false) => `<div class="sub-row" style="background:${i%2===0?'#fff':'#FAFBFE'}">
+    <div style="min-width:0;flex:1">
+      <div class="sub-nm">${s.name}</div>
+      ${s.notes||s.renews?`<div class="sub-dt">${[s.renews,s.notes].filter(Boolean).join(' · ')}</div>`:''}
+    </div>
+    <div class="sub-r">
+      <span class="pill" style="background:${SBG[s.acct]};color:${SCOL[s.acct]}">${s.acct}</span>
+      ${annual?`<span class="annual-pill">${money(s.amt)}/yr</span>`:''}
+      <span class="sub-amt">${annual?money(s.amt/12)+'/mo':money(s.amt)}</span>
+    </div>
+  </div>`;
+
+  return `<div class="sub-sg">
+    <div class="card sc"><div class="sc-lbl"><span>💸</span><span>Monthly Recurring</span></div><div class="sc-val" style="color:${th.accent}">${money(totalMonthly)}</div></div>
+    <div class="card sc"><div class="sc-lbl"><span>📅</span><span>Annual (per month)</span></div><div class="sc-val" style="color:#D97706">${money(annualMoEquiv)}</div></div>
+    <div class="card sc"><div class="sc-lbl"><span>📊</span><span>Total Monthly Cost</span></div><div class="sc-val" style="color:#EF4444">${money(grand)}</div></div>
+  </div>
+  <div class="sub-title">Personal &amp; Joint — Monthly (${money(persMonthly.reduce((s,r)=>s+r.amt,0))})</div>
+  <div class="card">${persMonthly.map((s,i)=>sRow(s,i)).join('')}</div>
+  <div class="sub-title">Business — Monthly (${money(bizMonthly.reduce((s,r)=>s+r.amt,0))})</div>
+  <div class="card">${bizMonthly.map((s,i)=>sRow(s,i)).join('')}</div>
+  <div class="sub-title">Annual Subscriptions (${money(totalAnnual)}/yr · ${money(annualMoEquiv)}/mo equiv)</div>
+  <div class="card">${SUBS_ANNUAL.map((s,i)=>sRow(s,i,true)).join('')}</div>`;
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+const RENDERERS = {Personal:renderPersonal,Business:renderBusiness,Dream:renderDream,Balances:renderBalances,Subscriptions:renderSubscriptions};
+
+function render() {
+  setTheme(tab);
+  document.getElementById('app').innerHTML = `<div>
+    <div class="header">
+      <div class="hi">
+        <div class="heyebrow">Finance Tracker</div>
+        <div class="htitle">Budget Dashboard</div>
+        <div class="hsub">Budget Tracking · ${tab === 'Balances' && balLastSync ? 'Live data' : 'Data as of April 21, 2026'}</div>
+        <div class="tabs">
+          ${Object.keys(THEMES).map(t=>`<button class="tab${t===tab?' active':''}" onclick="go('${t}')">${ICONS[t]} ${t}</button>`).join('')}
         </div>
       </div>
     </div>
-
-    <div class="section-title">Accounts</div>
-    <div class="accounts-grid">${cardHTML}</div>
-
-    <div class="section-title">Recent Transactions</div>
-    <div class="txn-list">${txnHTML}</div>`;
+    <div class="main">${RENDERERS[tab]()}</div>
+  </div>`;
 }
+
+function go(t) {
+  tab = t;
+  render();
+  // Fetch live data when switching to Balances if not loaded yet
+  if (t === 'Balances' && !liveBalances && accessToken) fetchBalances();
+  if (t === 'Balances' && !accessToken) showSignInIfNeeded();
+}
+
+render();
 </script>
 </body>
 </html>
